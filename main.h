@@ -3,21 +3,64 @@
 
 #include <stdlib.h>
 #include <stdarg.h>
-#include <unistd.h>
 
+/**
+ * struct flags - flags to "turn on"
+ * when a flag specifier is passed to _printf()
+ * @plus: flag for the '+' character
+ * @space: flag for the ' ' character
+ * @hash: flag for the '#' character
+ */
+typedef struct flags
+{
+	int plus;
+	int space;
+	int hash;
+} flags_t;
+
+/**
+ * struct printHandler - choose the right function depending
+ * on the format specifier passed to _printf()
+ * @c: format specifier
+ * @f: pointer to the correct printing function
+ */
+typedef struct printHandler
+{
+	char c;
+	int (*f)(va_list ap, flags_t *f);
+} ph;
+
+int print_int(va_list l, flags_t *f);
+void print_number(int n);
+int print_unsigned(va_list l, flags_t *f);
+int count_digit(int i);
+
+int print_hex(va_list l, flags_t *f);
+int print_hex_big(va_list l, flags_t *f);
+int print_binary(va_list l, flags_t *f);
+int print_octal(va_list l, flags_t *f);
+
+char *convert(unsigned long int num, int base, int lowercase);
+
+int _printf(const char *format, ...);
+
+int (*get_print(char s))(va_list, flags_t *);
+
+int get_flag(char s, flags_t *f);
+
+int print_string(va_list l, flags_t *f);
+int print_char(va_list l, flags_t *f);
 
 int _putchar(char c);
-int _printf(const char *format, ...);
-int print_num(long int n);
-int print_string(char *str);
-int print_binary(unsigned int num);
-int print_unknown_spec(char c);
-int print_odh(char c, unsigned int num);
-int dec_to_oct(unsigned int num);
-int dec_to_hex(char c, unsigned int num);
-int print_S(char *);
-int print_reverse(char *s);
-int print_rot13(char *c);
-int print_pointer(void *p);
+int _puts(char *str);
+
+int print_rot13(va_list l, flags_t *f);
+int print_rev(va_list l, flags_t *f);
+int print_bigS(va_list l, flags_t *f);
+
+int print_address(va_list l, flags_t *f);
+
+
+int print_percent(va_list l, flags_t *f);
 
 #endif
